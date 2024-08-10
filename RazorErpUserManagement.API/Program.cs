@@ -13,6 +13,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 builder.Services.ConfigureServices();
 
+string key = builder.Configuration.GetValue<string>("Jwt:Key");
+string issuer = builder.Configuration.GetValue<string>("Jwt:Issuer");
+string audience = builder.Configuration.GetValue<string>("Jwt:Audience");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -22,9 +26,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://localhost:44392/",
-            ValidAudience = "https://localhost:44392/",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("jOEp6NJYs64sS6BdEfF3004It4SWSNr7"))
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
         };
     });
 
