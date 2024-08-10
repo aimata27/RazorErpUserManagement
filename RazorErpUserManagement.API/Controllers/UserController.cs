@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RazorErpUserManagement.API.Interfaces;
 
 namespace RazorErpUserManagement.API.Controllers
@@ -7,6 +8,7 @@ namespace RazorErpUserManagement.API.Controllers
     [Authorize(Roles = "user")]
     [Route("api/[controller]")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

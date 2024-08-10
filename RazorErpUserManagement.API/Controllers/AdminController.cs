@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RazorErpUserManagement.API.Interfaces;
 using RazorErpUserManagement.API.Models.Dto;
 
@@ -8,6 +9,7 @@ namespace RazorErpUserManagement.API.Controllers
     [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     [ApiController]
+    [EnableRateLimiting("fixed")]
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _userManagementService;
