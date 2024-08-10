@@ -1,4 +1,5 @@
 ﻿using RazorErpUserManagement.API.Interfaces;
+using RazorErpUserManagement.API.Models.Data;
 using RazorErpUserManagement.API.Services;
 
 namespace RazorErpUserManagement.API
@@ -7,7 +8,9 @@ namespace RazorErpUserManagement.API
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<ILoginService, LoginService>()
+                .AddTransient<DapperDbContext>()
+                .AddScoped<IUserManagementService, UserManagementService>();
 
             return services;
         }

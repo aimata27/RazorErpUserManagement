@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RazorErpUserManagement.API.Interfaces;
+using RazorErpUserManagement.API.Models;
 
 namespace RazorErpUserManagement.API.Controllers
 {
@@ -8,36 +10,52 @@ namespace RazorErpUserManagement.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        // GET: api/<AdminController>
+        private readonly IUserManagementService _userManagementService;
+        public AdminController(IUserManagementService userManagementService)
+        {
+            _userManagementService = userManagementService;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var users = await _userManagementService.GetAllUsersAsync();
+
+            if (users != null)
+                return Ok(users);
+
+            return NotFound();
         }
 
-        // GET api/<AdminController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<AdminController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] UserDetails userDetails)
         {
+            var isCompanyExists = await _userManagementService.IsCompanyExistsAsync(userDetails.CompanyId);
+
+            if (isCompanyExists)
+            {
+                _userManagementService.CreateUserAsync(userDetails);
+
+                return Ok("User created.");
+            }
+
+            return BadRequest("Company does not exists.");
         }
 
-        // PUT api/<AdminController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] UserDetails userDetails)
         {
+            _userManagementService.UpdateUserAsync(userDetails, id);
+
+            return Ok("User updated.");
         }
 
-        // DELETE api/<AdminController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            _userManagementService.DeleteUserAsync(id);
+
+            return Ok("User deleted.");
         }
     }
 }
