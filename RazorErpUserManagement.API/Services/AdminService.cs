@@ -1,18 +1,19 @@
 ﻿using Dapper;
 using RazorErpUserManagement.API.Interfaces;
-using RazorErpUserManagement.API.Models;
 using RazorErpUserManagement.API.Models.Data;
+using RazorErpUserManagement.API.Models.Dto;
 using RazorErpUserManagement.API.Models.Entities;
 using System.Data;
 
 namespace RazorErpUserManagement.API.Services
 {
-    public class UserManagementService : IUserManagementService
+    public class AdminService : IAdminService
     {
         private readonly DapperDbContext _dbContext;
         private readonly IDbConnection _dbConnection;
 
-        public UserManagementService(DapperDbContext dbContext)
+
+        public AdminService(DapperDbContext dbContext, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = dbContext;
             _dbConnection = _dbContext.CreateConnection();

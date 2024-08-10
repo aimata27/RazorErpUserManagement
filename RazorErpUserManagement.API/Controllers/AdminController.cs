@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RazorErpUserManagement.API.Interfaces;
-using RazorErpUserManagement.API.Models;
+using RazorErpUserManagement.API.Models.Dto;
 
 namespace RazorErpUserManagement.API.Controllers
 {
@@ -10,8 +10,8 @@ namespace RazorErpUserManagement.API.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly IUserManagementService _userManagementService;
-        public AdminController(IUserManagementService userManagementService)
+        private readonly IAdminService _userManagementService;
+        public AdminController(IAdminService userManagementService)
         {
             _userManagementService = userManagementService;
         }

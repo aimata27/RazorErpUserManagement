@@ -10,7 +10,8 @@ namespace RazorErpUserManagement.API
         {
             services.AddTransient<ILoginService, LoginService>()
                 .AddTransient<DapperDbContext>()
-                .AddScoped<IUserManagementService, UserManagementService>();
+                .AddScoped<IAdminService, AdminService>()
+                .AddScoped<IUserService, UserService>();
 
             return services;
         }

@@ -1,9 +1,9 @@
-﻿using RazorErpUserManagement.API.Models;
+﻿using RazorErpUserManagement.API.Models.Dto;
 using RazorErpUserManagement.API.Models.Entities;
 
 namespace RazorErpUserManagement.API.Interfaces
 {
-    public interface IUserManagementService
+    public interface IAdminService
     {
         Task<List<User>> GetAllUsersAsync();
         void CreateUserAsync(UserDetails user);

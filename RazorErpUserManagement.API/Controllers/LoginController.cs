@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RazorErpUserManagement.API.Interfaces;
-using RazorErpUserManagement.API.Models;
+using RazorErpUserManagement.API.Models.Dto;
 
 namespace RazorErpUserManagement.API.Controllers
 {
@@ -20,9 +20,9 @@ namespace RazorErpUserManagement.API.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login([FromBody] UserLogin userLogin)
+        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
         {
-            var user = _loginService.Authenticate(userLogin);
+            var user = await _loginService.Authenticate(userLogin);
 
             if (user != null)
             {

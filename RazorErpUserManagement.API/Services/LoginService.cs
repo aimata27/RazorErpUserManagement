@@ -1,7 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using RazorErpUserManagement.API.Constants;
+﻿using Dapper;
+using Microsoft.IdentityModel.Tokens;
 using RazorErpUserManagement.API.Interfaces;
-using RazorErpUserManagement.API.Models;
+using RazorErpUserManagement.API.Models.Data;
+using RazorErpUserManagement.API.Models.Dto;
+using RazorErpUserManagement.API.Models.Entities;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,24 +14,28 @@ namespace RazorErpUserManagement.API.Services
     public class LoginService : ILoginService
     {
         private readonly IConfiguration _configuration;
+        private readonly DapperDbContext _dbContext;
+        private readonly IDbConnection _dbConnection;
 
-        public LoginService(IConfiguration configuration)
+        public LoginService(IConfiguration configuration, DapperDbContext dbContext)
         {
             _configuration = configuration;
+            _dbContext = dbContext;
+            _dbConnection = _dbContext.CreateConnection();
         }
 
-        public string GenerateToken(UserDetails userDetails)
+        public string GenerateToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userDetails.Username),
-                new Claim(ClaimTypes.Email, userDetails.Email),
-                new Claim(ClaimTypes.GivenName, userDetails.GivenName),
-                new Claim(ClaimTypes.Surname, userDetails.Surname),
-                new Claim(ClaimTypes.Role, userDetails.Role),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.GivenName, user.GivenName),
+                new Claim(ClaimTypes.Surname, user.Surname),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
@@ -41,10 +48,12 @@ namespace RazorErpUserManagement.API.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public UserDetails Authenticate(UserLogin userLogin)
+        public async Task<User> Authenticate(UserLogin userLogin)
         {
-            var user = UserConstants.Users.FirstOrDefault(x => x.Username.Equals(userLogin.Username, StringComparison.CurrentCultureIgnoreCase)
-            && x.Password.Equals(userLogin.Password, StringComparison.CurrentCultureIgnoreCase));
+            string sqlQuery = "SELECT * FROM Users WHERE " +
+                $"Username = '{userLogin.Username}' AND Password = '{userLogin.Password}'";
+
+            var user = await _dbConnection.QueryFirstOrDefaultAsync<User>(sqlQuery);
 
             if (user != null)
                 return user;

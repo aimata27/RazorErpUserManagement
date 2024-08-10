@@ -1,4 +1,4 @@
-﻿namespace RazorErpUserManagement.API.Models
+﻿namespace RazorErpUserManagement.API.Models.Dto
 {
     public class UserDetails
     {
