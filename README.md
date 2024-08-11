@@ -16,6 +16,12 @@ For DB:
 1.	Initially inserted data for the "admin" role just to access the admin endpoints. 
 2.	Since the requirement for the companies are added outside of the API, I also initially created a table for Companies and inserted 3 sample data. 
 3.	This could've been automatically implemented if I use EF Core Code First Approach but the requirement provided for data access is only Dapper. 
+
+Note: For creating data for user, the field for company is CompanyId (int):
+•	1 – Jollibee
+•	2 – McDonalds
+•	3 - KFC
+
 I also provided the necessary files (test screenshots, sql scripts, postman collection), if only needed.
 
 If you have any questions please don't hesitate to contact me. Thank you so much and good luck to me! 
